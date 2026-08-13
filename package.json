@@ -1,0 +1,15 @@
+{
+  "name": "kestrel-customer-app",
+  "version": "1.0.0",
+  "description": "Kestrel Motor Company customer app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
