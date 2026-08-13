@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>My Kestrels</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="brand">KESTREL</div>
+      <div class="subbrand">MOTOR COMPANY</div>
+    </div>
+    <button class="icon-btn" aria-label="Notifications">🔔</button>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">GARAGE IN YOUR POCKET</p>
+        <h1>Welcome to My Kestrels</h1>
+        <p>Your vehicle, service history, reminders, bookings and support in one place.</p>
+      </div>
+      <div class="car-card">
+        <span class="label">MY VEHICLE</span>
+        <h2>Demo Vehicle</h2>
+        <p class="reg">AB12 CDE</p>
+        <div class="stats">
+          <div><span>MOT</span><strong>18 Mar 2027</strong></div>
+          <div><span>Service</span><strong>Due in 4 months</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <button class="tile" data-panel="vehicle"><span>🚘</span><b>My Vehicle</b><small>Details & documents</small></button>
+      <button class="tile" data-panel="service"><span>🛠️</span><b>Service & MOT</b><small>Reminders & history</small></button>
+      <button class="tile" data-panel="booking"><span>📅</span><b>Book In</b><small>Service, MOT or repair</small></button>
+      <button class="tile" data-panel="support"><span>💬</span><b>Support</b><small>Message Kestrels</small></button>
+      <a class="tile" href="https://www.kestrelsmotorcompany.co.uk" target="_blank" rel="noopener"><span>🚗</span><b>Cars for Sale</b><small>View latest stock</small></a>
+      <a class="tile" href="https://driveawayfinance.co.uk" target="_blank" rel="noopener"><span>💷</span><b>Finance</b><small>Explore finance options</small></a>
+    </section>
+
+    <section class="panel" id="vehicle">
+      <div class="panel-head"><h2>My Vehicle</h2><button class="close">×</button></div>
+      <div class="info-list">
+        <p><span>Registration</span><strong>AB12 CDE</strong></p>
+        <p><span>Make / Model</span><strong>Demo Vehicle</strong></p>
+        <p><span>Mileage</span><strong>42,350 miles</strong></p>
+        <p><span>Warranty</span><strong>Active</strong></p>
+      </div>
+      <p class="note">This is demonstration data. Customer vehicle data can be added later.</p>
+    </section>
+
+    <section class="panel" id="service">
+      <div class="panel-head"><h2>Service & MOT</h2><button class="close">×</button></div>
+      <div class="reminder good"><b>MOT due</b><span>18 March 2027</span></div>
+      <div class="reminder"><b>Next service</b><span>December 2026</span></div>
+      <div class="reminder"><b>Tyres</b><span>Check at next visit</span></div>
+    </section>
+
+    <section class="panel" id="booking">
+      <div class="panel-head"><h2>Request a Booking</h2><button class="close">×</button></div>
+      <form id="bookingForm">
+        <label>What do you need?
+          <select required>
+            <option value="">Choose one</option>
+            <option>Service</option>
+            <option>MOT</option>
+            <option>Repair / Diagnostic</option>
+            <option>Tyres</option>
+            <option>Air-conditioning</option>
+          </select>
+        </label>
+        <label>Preferred date
+          <input type="date" required>
+        </label>
+        <label>Notes
+          <textarea rows="3" placeholder="Tell us anything useful"></textarea>
+        </label>
+        <button class="primary" type="submit">Send booking request</button>
+      </form>
+      <p id="bookingMsg" class="success-msg"></p>
+    </section>
+
+    <section class="panel" id="support">
+      <div class="panel-head"><h2>Customer Support</h2><button class="close">×</button></div>
+      <p>Need help with your car, warranty, service or booking?</p>
+      <a class="primary block" href="https://www.kestrelsmotorcompany.co.uk" target="_blank" rel="noopener">Contact Kestrels</a>
+      <button class="secondary block" id="aiHelp">Ask My Kestrels AI</button>
+      <div id="aiBox" class="ai-box hidden">
+        <b>My Kestrels AI</b>
+        <p>This demo assistant is ready for us to connect to live AI and WhatsApp later.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-active">Home</button>
+    <button data-panel="booking">Book</button>
+    <button data-panel="support">Help</button>
+  </nav>
+
+  <script src="/app.js"></script>
+</body>
+</html>
