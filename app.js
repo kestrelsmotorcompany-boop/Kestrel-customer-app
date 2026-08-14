@@ -28,3 +28,18 @@ document.getElementById('aiHelp').addEventListener('click', () => {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
+fetch('Customer.json')
+  .then(response => response.json())
+  .then(data => {
+    const vehicle = data.customer.vehicle;
+
+    document.querySelector('.car-card h2').textContent = vehicle.make;
+    document.querySelector('.car-card .reg').textContent = vehicle.registration;
+
+    const info = document.querySelectorAll('#vehicle .info-list strong');
+    info[0].textContent = vehicle.registration;
+    info[1].textContent = vehicle.make;
+    info[2].textContent = vehicle.mileage + ' miles';
+    info[3].textContent = vehicle.warranty;
+  })
+  .catch(error => console.log('Customer data error:', error));
