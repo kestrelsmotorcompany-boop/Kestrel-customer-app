@@ -28,7 +28,32 @@ document.getElementById('aiHelp').addEventListener('click', () => {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
-fetch('Customer.json')
+
+const params = new URLSearchParams(window.location.search);
+const customerId = params.get('customer') || 'demo-001';
+
+fetch('Customers.json', { cache: 'no-store' })
+  .then(response => response.json())
+  .then(data => {
+    const customer =
+      data.customers.find(c => c.id === customerId) || data.customers[0];
+
+    const vehicle = customer.vehicle;
+
+    document.querySelector('.car-card h2').textContent = vehicle.make;
+    document.querySelector('.car-card .reg').textContent = vehicle.registration;
+
+    const stats = document.querySelectorAll('.car-card .stats strong');
+    if (stats[0]) stats[0].textContent = vehicle.motDue;
+    if (stats[1]) stats[1].textContent = vehicle.serviceDue;
+
+    const info = document.querySelectorAll('#vehicle .info-list strong');
+    info[0].textContent = vehicle.registration;
+    info[1].textContent = vehicle.make;
+    info[2].textContent = vehicle.mileage + ' miles';
+    info[3].textContent = vehicle.warranty;
+  })
+  .catch(error => console.log('Customer data error:', error));
   .then(response => response.json())
   .then(data => {
     const vehicle = data.customer.vehicle;
