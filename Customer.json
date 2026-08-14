@@ -1,4 +1,5 @@
- "customer": {
+ {
+  "customer": {
     "name": "Demo Customer",
     "vehicle": {
       "registration": "WWL312",
