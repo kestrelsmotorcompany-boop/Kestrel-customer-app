@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Kestrels - Customer Setup</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f2;
+      margin: 0;
+      padding: 30px 15px;
+      color: #222;
+    }
+
+    .admin {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    h1 { margin-bottom: 5px; }
+
+    .tag {
+      color: #9bad00;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #result {
+      display: none;
+      margin-top: 25px;
+      padding: 18px;
+      background: #f1f3e5;
+      border-radius: 10px;
+      word-break: break-all;
+    }
+
+    #customerLink {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="admin">
+
+  <div class="tag">KESTRELS MOTOR COMPANY</div>
+  <h1>Add Customer</h1>
+  <p>Create a My Kestrels customer record and individual app link.</p>
+
+  <label>Customer Name</label>
+  <input id="name" placeholder="e.g. John Smith">
+
+  <label>Registration</label>
+  <input id="registration" placeholder="e.g. AB12 CDE">
+
+  <label>Make / Model</label>
+  <input id="make" placeholder="e.g. Volkswagen Golf">
+
+  <label>Mileage</label>
+  <input id="mileage" placeholder="e.g. 31,500">
+
+  <label>MOT Due</label>
+  <input id="motDue" type="date">
+
+  <label>Service Due</label>
+  <input id="serviceDue" placeholder="e.g. January 2027">
+
+  <label>Warranty</label>
+  <select id="warranty">
+    <option>Active</option>
+    <option>Expired</option>
+    <option>Not supplied</option>
+  </select>
+
+  <button onclick="createCustomer()">Create Customer Link</button>
+
+  <div id="result">
+    <strong>Customer link created:</strong>
+    <p id="customerLink"></p>
+    <button onclick="copyLink()">Copy Link</button>
+  </div>
+
+</div>
+
+<script>
+function createCustomer() {
+
+  const id = "customer-" + Date.now();
+
+  const customer = {
+    id: id,
+    name: document.getElementById("name").value,
+    vehicle: {
+      registration: document.getElementById("registration").value
+        .replace(/\s/g, "")
+        .toUpperCase(),
+      make: document.getElementById("make").value,
+      mileage: document.getElementById("mileage").value,
+      motDue: document.getElementById("motDue").value,
+      serviceDue: document.getElementById("serviceDue").value,
+      warranty: document.getElementById("warranty").value
+    }
+  };
+
+  localStorage.setItem(id, JSON.stringify(customer));
+
+  const base =
+    window.location.origin +
+    window.location.pathname.replace("admin.html", "");
+
+  const link =
+    base + "?customer=" + encodeURIComponent(id);
+
+  document.getElementById("customerLink").textContent = link;
+  document.getElementById("result").style.display = "block";
+}
+
+function copyLink() {
+  const link =
+    document.getElementById("customerLink").textContent;
+
+  navigator.clipboard.writeText(link);
+  alert("Customer link copied");
+}
+</script>
+
+</body>
+</html>
