@@ -1,0 +1,12 @@
+ "customer": {
+    "name": "Demo Customer",
+    "vehicle": {
+      "registration": "WWL312",
+      "make": "Range Rover",
+      "mileage": "42,350",
+      "motDue": "18 March 2027",
+      "serviceDue": "December 2026",
+      "warranty": "Active"
+    }
+  }
+}
