@@ -2,25 +2,13 @@
   "customers": [
     {
       "id": "demo-001",
-      "name": "Demo Customer",
+      "name": "Steve",
       "vehicle": {
-        "registration": "WWL312",
-        "make": "Range Rover",
-        "mileage": "42,351",
+        "registration": "HN70 FTE",
+        "make": "MG ZS EV",
+        "mileage": "44,000",
         "motDue": "18 March 2027",
         "serviceDue": "December 2026",
-        "warranty": "Active"
-      }
-    },
-    {
-      "id": "demo-002",
-      "name": "Test Customer 2",
-      "vehicle": {
-        "registration": "AB12CDE",
-        "make": "Volkswagen Golf",
-        "mileage": "31,500",
-        "motDue": "10 June 2027",
-        "serviceDue": "January 2027",
         "warranty": "Active"
       }
     }
