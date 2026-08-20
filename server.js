@@ -96,6 +96,64 @@ app.get("/api/customers", async (req, res) => {
   }
 });
 
+
+async function getDvsaAccessToken() {
+  const response = await fetch(process.env.DVSA_TOKEN_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: process.env.DVSA_CLIENT_ID,
+      client_secret: process.env.DVSA_CLIENT_SECRET,
+      scope: process.env.DVSA_SCOPE_URL,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`DVSA token error: ${response.status} ${text}`);
+  }
+
+  const data = await response.json();
+  return data.access_token;
+}
+
+app.get("/api/mot/:registration", async (req, res) => {
+  try {
+    const registration = req.params.registration
+      .replace(/\s+/g, "")
+      .toUpperCase();
+
+    const accessToken = await getDvsaAccessToken();
+
+    const response = await fetch(
+      `https://history.mot.api.gov.uk/v1/trade/vehicles/registration/${encodeURIComponent(registration)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "X-API-Key": process.env.DVSA_API_KEY,
+          Accept: "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error("DVSA MOT lookup error:", error);
+    res.status(500).json({
+      error: "Unable to retrieve MOT information",
+    });
+  }
+});
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
