@@ -140,7 +140,7 @@ app.get("/api/mot/:registration", async (req, res) => {
     );
 
     const data = await response.json();
-
+console.log("DVSA responce:", response.status, JSON.stringify(data));
     if (!response.ok) {
       return res.status(response.status).json(data);
     }
