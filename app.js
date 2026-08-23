@@ -49,19 +49,20 @@ function showCustomer(customer) {
   if (info[2]) info[2].textContent = vehicle.mileage + ' miles';
   if (info[3]) info[3].textContent = vehicle.warranty;
 }
-
-const savedCustomer = localStorage.getItem(customerId);
-
-if (savedCustomer) {
-  showCustomer(JSON.parse(savedCustomer));
-} else {
-  fetch('Customers.json', { cache: 'no-store' })
-    .then(response => response.json())
-    .then(data => {
-      const customer =
-        data.customers.find(c => c.id === customerId) || data.customers[0];
-
-      showCustomer(customer);
-    })
-    .catch(error => console.log('Customer data error:', error));
+fetch('/api/customers/' + encodeURIComponent(customerId), { cache: 'no-store' })
+  .then(response => {
+    if (!response.ok) throw new Error('Customer not found');
+    return response.json();
+  })
+  .then(customer => showCustomer({
+    vehicle: {
+      make: customer.make,
+      registration: customer.registration,
+      mileage: customer.mileage,
+      motDue: customer.mot_due,
+      serviceDue: customer.service_due,
+      warranty: customer.warranty
+    }
+  }))
+  .catch(error => console.log('Customer data error:', error));
 }
