@@ -1,5 +1,5 @@
 
-const CACHE = 'my-kestrels-v4';
+const CACHE = 'my-kestrels-v5';
 const ASSETS = ['./', './styles.css', './app.js', './manifest.json'];
 
 self.addEventListener('install', event => {
@@ -22,7 +22,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.url.includes('Customer.json')) {
+  if (event.request.url.includes('/api/')) event.request.url.includes('/app.js')) {
     event.respondWith(fetch(event.request, { cache: 'no-store' }));
     return;
   }
