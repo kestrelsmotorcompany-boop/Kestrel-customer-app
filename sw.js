@@ -1,5 +1,5 @@
 
-const CACHE = 'my-kestrels-v3';
+const CACHE = 'my-kestrels-v4';
 const ASSETS = ['./', './styles.css', './app.js', './manifest.json'];
 
 self.addEventListener('install', event => {
