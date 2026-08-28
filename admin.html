@@ -166,7 +166,23 @@ function createCustomer() {
     }
   };
 
-  localStorage.setItem(id, JSON.stringify(customer));
+  fetch("/api/customers", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    id: id,
+    name: customer.name,
+    registration: customer.vehicle.registration,
+    make: customer.vehicle.make,
+    mileage: customer.vehicle.mileage,
+    motDue: customer.vehicle.motDue,
+    serviceDue: customer.vehicle.serviceDue,
+    warranty: customer.vehicle.warranty
+  })
+});
+
 
   const base =
     window.location.origin +
