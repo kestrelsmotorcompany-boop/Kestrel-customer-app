@@ -65,4 +65,3 @@ fetch('/api/customers/' + encodeURIComponent(customerId), { cache: 'no-store' })
     }
   }))
   .catch(error => console.log('Customer data error:', error));
-}
