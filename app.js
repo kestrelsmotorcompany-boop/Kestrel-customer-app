@@ -35,6 +35,21 @@ const customerId = params.get('customer') || 'demo-001';
 
 function showCustomer(customer) {
   const vehicle = customer.vehicle;
+   const whatsappLinks = document.querySelectorAll('a[href*="wa.me/"]');
+  const vehicleName = vehicle.make;
+  const registration = vehicle.registration;
+
+  const whatsappMessages = [
+    `Hi Kestrels, I'd like to book my ${vehicleName}, registration ${registration}, in for a service, MOT or repair.`,
+    `Hi Kestrels, I need some help with my ${vehicleName}, registration ${registration}.`,
+    `Hi Kestrels, I'd like to arrange a service or MOT for my ${vehicleName}, registration ${registration}.`
+  ];
+
+  whatsappLinks.forEach((link, index) => {
+    if (whatsappMessages[index]) {
+      link.href = `https://wa.me/447939249588?text=${encodeURIComponent(whatsappMessages[index])}`;
+    }
+  });
 
   document.querySelector('.car-card h2').textContent = vehicle.make;
   document.querySelector('.car-card .reg').textContent = vehicle.registration;
