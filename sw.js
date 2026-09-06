@@ -21,7 +21,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-self.addEventListener('fetch', event => {
+if (event.request.url.includes('/api/') || event.request.url.includes('/app.js')) 
   if (event.request.url.includes('/api/')) event.request.url.includes('/app.js')) {
     event.respondWith(fetch(event.request, { cache: 'no-store' }));
     return;
