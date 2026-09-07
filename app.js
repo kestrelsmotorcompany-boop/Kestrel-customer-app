@@ -98,4 +98,6 @@ fetch('/api/customers/' + encodeURIComponent(customerId), { cache: 'no-store' })
     document.querySelector('.hero h1').textContent = 'Customer link not found';
     document.querySelector('.hero > div > p:last-child').textContent =
       'Please contact Kestrels Motor Company for a new link.';
+    document.querySelector('.car-card').hidden = true;
+    document.querySelector('.grid').hidden = true;
   });
