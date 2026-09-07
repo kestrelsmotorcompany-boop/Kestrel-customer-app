@@ -38,7 +38,7 @@
     <section class="grid">
       <button class="tile" data-panel="vehicle"><span>🚘</span><b>My Vehicle</b><small>Details & documents</small></button>
       <button class="tile" data-panel="service"><span>🛠️</span><b>Service & MOT</b><small>Reminders & history</small></button>
-    <a class="tile" href="https://wa.me/447939249588?text=Hi%20Kestrels%2C%20I%27d%20like%20to%20book%20my%20Range%20Rover%2C%20registration%20WWL312%2C%20in%20for%20a%20service%2C%20MOT%20or%20repair." target="_blank" rel="noopener"><span>📅</span><b>Book In</b><small>Service, MOT or repair</small></a>
+      <button class="tile" data-panel="booking"><span>📅</span><b>Book In</b><small>Service, MOT or repair</small></button>
       
 <a class="tile" href="https://wa.me/447939249588?text=Hi%20Kestrels%2C%20I%20need%20some%20help%20with%20my%20Range%20Rover%2C%20registration%20WWL312." target="_blank" rel="noopener"><span>💬</span><b>Support</b><small>WhatsApp Kestrels</small></a>
 
@@ -71,7 +71,7 @@
       <div class="panel-head"><h2>Request a Booking</h2><button class="close">×</button></div>
       <form id="bookingForm">
         <label>What do you need?
-          <select required>
+          <select id="bookingType" required>
             <option value="">Choose one</option>
             <option>Service</option>
             <option>MOT</option>
@@ -81,10 +81,10 @@
           </select>
         </label>
         <label>Preferred date
-          <input type="date" required>
+          <input id="bookingDate" type="date" required>
         </label>
         <label>Notes
-          <textarea rows="3" placeholder="Tell us anything useful"></textarea>
+          <textarea id="bookingNotes" rows="3" placeholder="Tell us anything useful"></textarea>
         </label>
         <button class="primary" type="submit">Send booking request</button>
       </form>
@@ -98,7 +98,7 @@
       <button class="secondary block" id="aiHelp">Ask My Kestrels AI</button>
       <div id="aiBox" class="ai-box hidden">
         <b>My Kestrels AI</b>
-        <p>This demo assistant is ready for us to connect to live AI and WhatsApp later.</p>
+        <p>For bookings, warranty questions or help with your vehicle, use the WhatsApp support button and the Kestrels team will respond.</p>
       </div>
     </section>
   </main>
@@ -109,6 +109,6 @@
     <button data-panel="support">Help</button>
   </nav>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

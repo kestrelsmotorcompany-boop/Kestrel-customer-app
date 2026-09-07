@@ -14,11 +14,20 @@ document.querySelectorAll('.close').forEach(btn => {
   btn.addEventListener('click', () => btn.closest('.panel').classList.remove('show'));
 });
 
+let activeVehicle = null;
+
 document.getElementById('bookingForm').addEventListener('submit', e => {
   e.preventDefault();
-  document.getElementById('bookingMsg').textContent =
-    'Thanks — your demo booking request has been recorded. Live booking/email delivery will be connected next.';
-  e.target.reset();
+  if (!activeVehicle) {
+    document.getElementById('bookingMsg').textContent = 'Please refresh the page and try again.';
+    return;
+  }
+  const type = document.getElementById('bookingType').value;
+  const date = document.getElementById('bookingDate').value;
+  const notes = document.getElementById('bookingNotes').value.trim();
+  const message = `Hi Kestrels, I'd like to request a ${type} booking for my ${activeVehicle.make}, registration ${activeVehicle.registration}. Preferred date: ${date}.${notes ? ` Notes: ${notes}` : ''}`;
+  window.open(`https://wa.me/447939249588?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+  document.getElementById('bookingMsg').textContent = 'Your booking request is ready to send in WhatsApp.';
 });
 
 document.getElementById('aiHelp').addEventListener('click', () => {
@@ -35,7 +44,8 @@ const customerId = params.get('customer') || 'demo-001';
 
 function showCustomer(customer) {
   const vehicle = customer.vehicle;
-   const whatsappLinks = document.querySelectorAll('a[href*="wa.me/"]');
+  activeVehicle = vehicle;
+  const whatsappLinks = document.querySelectorAll('a[href*="wa.me/"]');
   const vehicleName = vehicle.make;
   const registration = vehicle.registration;
 
@@ -58,6 +68,10 @@ function showCustomer(customer) {
   if (stats[0]) stats[0].textContent = vehicle.motDue;
   if (stats[1]) stats[1].textContent = vehicle.serviceDue;
 
+  const reminders = document.querySelectorAll('#service .reminder span');
+  if (reminders[0]) reminders[0].textContent = vehicle.motDue;
+  if (reminders[1]) reminders[1].textContent = vehicle.serviceDue;
+
   const info = document.querySelectorAll('#vehicle .info-list strong');
   if (info[0]) info[0].textContent = vehicle.registration;
   if (info[1]) info[1].textContent = vehicle.make;
@@ -79,4 +93,9 @@ fetch('/api/customers/' + encodeURIComponent(customerId), { cache: 'no-store' })
       warranty: customer.warranty
     }
   }))
-  .catch(error => console.log('Customer data error:', error));
+  .catch(error => {
+    console.log('Customer data error:', error);
+    document.querySelector('.hero h1').textContent = 'Customer link not found';
+    document.querySelector('.hero > div > p:last-child').textContent =
+      'Please contact Kestrels Motor Company for a new link.';
+  });
