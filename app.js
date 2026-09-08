@@ -25,6 +25,9 @@ const androidInstall = document.getElementById('androidInstall');
 const installedMessage = document.getElementById('installedMessage');
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInAppBrowser = /WhatsApp|FBAN|FBAV|Instagram/i.test(navigator.userAgent);
+const browserNotice = document.getElementById('browserNotice');
+const installButtons = document.querySelectorAll('[data-panel="install"]');
 
 function configureInstallHelp() {
   if (isStandalone) {
@@ -33,8 +36,14 @@ function configureInstallHelp() {
     installedMessage.classList.remove('hidden');
     return;
   }
-  if (isAppleMobile) iosInstall.classList.remove('hidden');
-  else androidInstall.classList.remove('hidden');
+  if (isAppleMobile) {
+    iosInstall.classList.remove('hidden');
+    installButtons.forEach(button => button.textContent = 'Add to Home Screen');
+    if (isInAppBrowser && browserNotice) browserNotice.classList.remove('hidden');
+  } else {
+    androidInstall.classList.remove('hidden');
+    installButtons.forEach(button => button.textContent = 'Install My Kestrels');
+  }
 }
 
 window.addEventListener('beforeinstallprompt', event => {
@@ -121,6 +130,11 @@ function showCustomer(customer) {
   if (info[1]) info[1].textContent = vehicle.make;
   if (info[2]) info[2].textContent = vehicle.mileage + ' miles';
   if (info[3]) info[3].textContent = vehicle.warranty;
+
+  if (!isStandalone && !sessionStorage.getItem('install-help-shown')) {
+    sessionStorage.setItem('install-help-shown', '1');
+    setTimeout(() => openPanel('install'), 650);
+  }
 }
 fetch('/api/customers/' + encodeURIComponent(customerId), { cache: 'no-store' })
   .then(response => {
