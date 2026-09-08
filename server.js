@@ -23,39 +23,64 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json({ limit: "32kb" }));
+app.use(express.urlencoded({ extended: false, limit: "8kb" }));
 
 function safeEqual(left, right) {
-  const leftBuffer = Buffer.from(left);
-  const rightBuffer = Buffer.from(right);
+  const leftBuffer = Buffer.from(String(left || ""));
+  const rightBuffer = Buffer.from(String(right || ""));
   return leftBuffer.length === rightBuffer.length && crypto.timingSafeEqual(leftBuffer, rightBuffer);
 }
 
-function requireAdmin(req, res, next) {
+function parseCookies(req) {
+  return String(req.get("cookie") || "").split(";").reduce((cookies, part) => {
+    const separator = part.indexOf("=");
+    if (separator < 0) return cookies;
+    const key = part.slice(0, separator).trim();
+    const value = part.slice(separator + 1).trim();
+    if (key) cookies[key] = value;
+    return cookies;
+  }, {});
+}
+
+function createAdminSession() {
+  const expires = Date.now() + (8 * 60 * 60 * 1000);
+  const payload = expires.toString(36);
+  const signature = crypto.createHmac("sha256", process.env.ADMIN_PASSWORD).update(payload).digest("base64url");
+  return payload + "." + signature;
+}
+
+function hasAdminSession(req) {
   const password = process.env.ADMIN_PASSWORD;
-  if (!password) return res.status(503).send("Admin access is not configured.");
+  if (!password) return false;
+  const token = parseCookies(req).my_kestrels_admin || "";
+  const separator = token.indexOf(".");
+  if (separator < 1) return false;
+  const payload = token.slice(0, separator);
+  const signature = token.slice(separator + 1);
+  const expires = parseInt(payload, 36);
+  if (!Number.isFinite(expires) || expires < Date.now()) return false;
+  const expected = crypto.createHmac("sha256", password).update(payload).digest("base64url");
+  return safeEqual(signature, expected);
+}
 
-  const header = req.get("authorization") || "";
-  if (!header.startsWith("Basic ")) {
-    res.set("WWW-Authenticate", 'Basic realm="My Kestrels Admin", charset="UTF-8"');
-    return res.status(401).send("Authentication required.");
-  }
+function requireAdmin(req, res, next) {
+  if (hasAdminSession(req)) return next();
+  return res.status(401).json({ error: "Staff sign-in required", login: "/staff-login" });
+}
 
-  let credentials;
-  try {
-    credentials = Buffer.from(header.slice(6), "base64").toString("utf8");
-  } catch {
-    credentials = "";
-  }
-
-  const separator = credentials.indexOf(":");
-  const username = separator >= 0 ? credentials.slice(0, separator) : "";
-  const suppliedPassword = separator >= 0 ? credentials.slice(separator + 1) : "";
-
-  if (username !== "admin" || !safeEqual(suppliedPassword, password)) {
-    res.set("WWW-Authenticate", 'Basic realm="My Kestrels Admin", charset="UTF-8"');
-    return res.status(401).send("Incorrect username or password.");
-  }
-  next();
+function staffLoginPage(showError) {
+  const error = showError ? '<p class="error">The username or password was not recognised. Please try again.</p>' : "";
+  return [
+    '<!doctype html><html lang="en"><head><meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
+    '<meta name="theme-color" content="#111111"><title>My Kestrels Staff Login</title>',
+    '<style>*{box-sizing:border-box}body{margin:0;background:#f3f3ef;color:#171717;font-family:Arial,sans-serif}header{background:#111;color:#fff;padding:26px 24px;border-bottom:5px solid #c4d600}.brand{font-size:28px;font-weight:800;letter-spacing:4px}.sub{color:#c4d600;font-size:12px;letter-spacing:4px;margin-top:4px}.wrap{max-width:520px;margin:48px auto;padding:20px}.card{background:#fff;border-radius:22px;padding:32px;box-shadow:0 16px 40px #0002}h1{margin:0 0 8px;font-size:32px}p{color:#555;line-height:1.5}label{display:block;font-weight:700;margin:20px 0 7px}input{width:100%;font-size:18px;padding:15px;border:1px solid #aaa;border-radius:10px}button{width:100%;margin-top:24px;padding:16px;background:#171717;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:700}.error{background:#fee;color:#9b1c1c;padding:12px;border-radius:8px}@media(max-width:560px){.wrap{margin:22px auto;padding:14px}.card{padding:24px}}</style></head><body>',
+    '<header><div class="brand">KESTRELS</div><div class="sub">MOTOR COMPANY</div></header>',
+    '<main class="wrap"><section class="card"><p style="color:#7c8b00;font-weight:800;letter-spacing:2px">MY KESTRELS</p><h1>Staff Login</h1><p>Sign in to manage customer records and create individual app links.</p>',
+    error,
+    '<form method="post" action="/staff-login"><label for="username">Username</label><input id="username" name="username" autocomplete="username" autocapitalize="none" required>',
+    '<label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required><button type="submit">Sign In</button></form></section></main></body></html>'
+  ].join("");
 }
 
 function normaliseCustomer(body, existingId) {
@@ -78,8 +103,25 @@ function normaliseCustomer(body, existingId) {
   return customer;
 }
 
-app.get("/admin.html", requireAdmin, (req, res) => {
-  res.sendFile(path.join(rootDir, "admin.html"));
+app.get("/staff-login", (req, res) => {
+  if (hasAdminSession(req)) return res.redirect("/admin.html");
+  res.set("Cache-Control", "no-store").type("html").send(staffLoginPage(req.query.error === "1"));
+});
+
+app.post("/staff-login", (req, res) => {
+  const configuredPassword = process.env.ADMIN_PASSWORD;
+  const username = String(req.body.username || "").trim();
+  const suppliedPassword = String(req.body.password || "");
+  if (!configuredPassword || username !== "admin" || !safeEqual(suppliedPassword, configuredPassword)) {
+    return res.redirect("/staff-login?error=1");
+  }
+  res.set("Set-Cookie", "my_kestrels_admin=" + createAdminSession() + "; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=28800");
+  return res.redirect("/admin.html");
+});
+
+app.get("/admin.html", (req, res) => {
+  if (!hasAdminSession(req)) return res.redirect("/staff-login");
+  res.set("Cache-Control", "no-store").sendFile(path.join(rootDir, "admin.html"));
 });
 
 app.post("/api/customers", requireAdmin, async (req, res) => {
