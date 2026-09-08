@@ -4,8 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111111">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="My Kestrels">
   <title>My Kestrels</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <script>
+    const appCustomerId = new URLSearchParams(location.search).get('customer');
+    const manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    manifestLink.href = appCustomerId
+      ? `/manifest.json?customer=${encodeURIComponent(appCustomerId)}`
+      : '/manifest.json';
+    document.head.appendChild(manifestLink);
+  </script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,7 +26,7 @@
       <div class="brand">KESTRELS</div>
       <div class="subbrand">MOTOR COMPANY</div>
     </div>
-    <button class="icon-btn" aria-label="Notifications">🔔</button>
+    <button class="install-top" data-panel="install">Install app</button>
   </header>
 
   <main class="wrap">
@@ -45,6 +57,12 @@
 
       <a class="tile" href="https://www.kestrelsmotorcompany.co.uk" target="_blank" rel="noopener"><span>🚗</span><b>Cars for Sale</b><small>View latest stock</small></a>
       <a class="tile" href="https://driveawayfinance.co.uk" target="_blank" rel="noopener"><span>💷</span><b>Finance</b><small>Explore finance options</small></a>
+    </section>
+
+    <section class="install-banner" id="installBanner">
+      <img src="/icon-192.png" alt="" width="56" height="56">
+      <div><b>Put My Kestrels on your phone</b><small>Open it like a normal app from your Home Screen.</small></div>
+      <button class="primary" data-panel="install">Install</button>
     </section>
 
     <section class="panel" id="vehicle">
@@ -101,6 +119,33 @@
         <p>For bookings, warranty questions or help with your vehicle, use the WhatsApp support button and the Kestrels team will respond.</p>
       </div>
     </section>
+
+    <section class="panel" id="install">
+      <div class="panel-head"><h2>Install My Kestrels</h2><button class="close" aria-label="Close">×</button></div>
+      <div class="install-intro">
+        <img src="/icon-192.png" alt="My Kestrels app icon" width="72" height="72">
+        <p>Save your personal My Kestrels link to your Home Screen and open it without the browser address bar.</p>
+      </div>
+      <button class="primary block hidden" id="installNow">Install My Kestrels</button>
+      <div id="iosInstall" class="install-steps hidden">
+        <h3>On iPhone or iPad</h3>
+        <ol>
+          <li>Make sure this page is open in <b>Safari</b>.</li>
+          <li>Tap the <b>Share</b> button <span aria-hidden="true">⬆️</span>.</li>
+          <li>Scroll down and tap <b>Add to Home Screen</b>.</li>
+          <li>Tap <b>Add</b>.</li>
+        </ol>
+      </div>
+      <div id="androidInstall" class="install-steps hidden">
+        <h3>On Android</h3>
+        <ol>
+          <li>Open this page in <b>Chrome</b>.</li>
+          <li>Tap the menu <b>⋮</b>.</li>
+          <li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li>
+        </ol>
+      </div>
+      <p class="installed-message hidden" id="installedMessage">My Kestrels is already installed on this device.</p>
+    </section>
   </main>
 
   <nav class="bottom-nav">
@@ -109,6 +154,6 @@
     <button data-panel="support">Help</button>
   </nav>
 
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

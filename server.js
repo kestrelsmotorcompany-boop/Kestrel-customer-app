@@ -141,6 +141,27 @@ app.get("/api/customers/:id", async (req, res) => {
   }
 });
 
+app.get("/manifest.json", (req, res) => {
+  const customerId = String(req.query.customer || "");
+  const validCustomerId = /^[a-zA-Z0-9-]{1,80}$/.test(customerId) ? customerId : "";
+  res.set("Cache-Control", "no-store").json({
+    name: "My Kestrels",
+    short_name: "My Kestrels",
+    id: validCustomerId ? `/my-kestrels/${validCustomerId}` : "/my-kestrels",
+    start_url: validCustomerId ? `/?customer=${encodeURIComponent(validCustomerId)}` : "/",
+    scope: "/",
+    display: "standalone",
+    display_override: ["standalone", "minimal-ui"],
+    background_color: "#f4f4f2",
+    theme_color: "#111111",
+    description: "Your vehicle, reminders, bookings and Kestrels support in one place.",
+    icons: [
+      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+    ]
+  });
+});
+
 async function setupDatabase() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS customers (
@@ -198,7 +219,7 @@ app.get("/api/mot/:registration", requireAdmin, async (req, res) => {
 });
 
 app.get("/", (req, res) => res.sendFile(path.join(rootDir, "index.html")));
-for (const file of ["app.js", "styles.css", "manifest.json", "sw.js"]) {
+for (const file of ["app.js", "styles.css", "sw.js", "icon.svg", "icon-192.png", "icon-512.png", "apple-touch-icon.png"]) {
   app.get("/" + file, (req, res) => res.sendFile(path.join(rootDir, file)));
 }
 

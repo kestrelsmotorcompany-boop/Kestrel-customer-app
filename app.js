@@ -15,6 +15,50 @@ document.querySelectorAll('.close').forEach(btn => {
 });
 
 let activeVehicle = null;
+let deferredInstallPrompt = null;
+
+const installNow = document.getElementById('installNow');
+const installBanner = document.getElementById('installBanner');
+const installTop = document.querySelector('.install-top');
+const iosInstall = document.getElementById('iosInstall');
+const androidInstall = document.getElementById('androidInstall');
+const installedMessage = document.getElementById('installedMessage');
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+function configureInstallHelp() {
+  if (isStandalone) {
+    installBanner.classList.add('hidden');
+    installTop.classList.add('hidden');
+    installedMessage.classList.remove('hidden');
+    return;
+  }
+  if (isAppleMobile) iosInstall.classList.remove('hidden');
+  else androidInstall.classList.remove('hidden');
+}
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installNow.classList.remove('hidden');
+  androidInstall.classList.remove('hidden');
+});
+
+installNow.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  const choice = await deferredInstallPrompt.userChoice;
+  if (choice.outcome === 'accepted') installBanner.classList.add('hidden');
+  deferredInstallPrompt = null;
+  installNow.classList.add('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  installBanner.classList.add('hidden');
+  installTop.classList.add('hidden');
+});
+
+configureInstallHelp();
 
 document.getElementById('bookingForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -100,4 +144,6 @@ fetch('/api/customers/' + encodeURIComponent(customerId), { cache: 'no-store' })
       'Please contact Kestrels Motor Company for a new link.';
     document.querySelector('.car-card').style.display = 'none';
     document.querySelector('.grid').style.display = 'none';
+    installBanner.style.display = 'none';
+    installTop.style.display = 'none';
   });
