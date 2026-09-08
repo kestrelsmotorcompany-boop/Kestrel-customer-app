@@ -1,6 +1,6 @@
 
-const CACHE = 'my-kestrels-v8';
-const ASSETS = ['./styles.css', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const CACHE = 'my-kestrels-v9';
+const ASSETS = ['./styles.css?v=10', './icon-kestrels-traffic-192.png', './icon-kestrels-traffic-512.png', './icon-kestrels-traffic-maskable-512.png', './apple-touch-icon-traffic.png'];
 
 self.addEventListener('install', event => {
   self.skipWaiting();

@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="My Kestrels">
   <title>My Kestrels</title>
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-traffic.png">
   <script>
     const appCustomerId = new URLSearchParams(location.search).get('customer');
     const manifestLink = document.createElement('link');
@@ -18,7 +18,7 @@
       : '/manifest.json';
     document.head.appendChild(manifestLink);
   </script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
   <header class="topbar">
@@ -60,7 +60,7 @@
     </section>
 
     <section class="install-banner" id="installBanner">
-      <img src="/icon-192.png" alt="" width="56" height="56">
+      <img src="/icon-kestrels-traffic-192.png" alt="" width="56" height="56">
       <div><b>Put My Kestrels on your phone</b><small>Open it like a normal app from your Home Screen.</small></div>
       <button class="primary" data-panel="install">Install</button>
     </section>
@@ -123,7 +123,7 @@
     <section class="panel" id="install">
       <div class="panel-head"><h2>Install My Kestrels</h2><button class="close" aria-label="Close">×</button></div>
       <div class="install-intro">
-        <img src="/icon-192.png" alt="My Kestrels app icon" width="72" height="72">
+        <img src="/icon-kestrels-traffic-192.png" alt="My Kestrels app icon" width="72" height="72">
         <p>Save your personal My Kestrels link to your Home Screen and open it without the browser address bar.</p>
       </div>
       <button class="primary block hidden" id="installNow">Install My Kestrels</button>

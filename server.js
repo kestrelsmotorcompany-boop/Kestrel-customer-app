@@ -74,9 +74,9 @@ function staffLoginPage(showError) {
     '<!doctype html><html lang="en"><head><meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
     '<meta name="theme-color" content="#111111"><title>My Kestrels Staff Login</title>',
-    '<style>*{box-sizing:border-box}body{margin:0;background:#f3f3ef;color:#171717;font-family:Arial,sans-serif}header{background:#111;color:#fff;padding:26px 24px;border-bottom:5px solid #c4d600}.brand{font-size:28px;font-weight:800;letter-spacing:4px}.sub{color:#c4d600;font-size:12px;letter-spacing:4px;margin-top:4px}.wrap{max-width:520px;margin:48px auto;padding:20px}.card{background:#fff;border-radius:22px;padding:32px;box-shadow:0 16px 40px #0002}h1{margin:0 0 8px;font-size:32px}p{color:#555;line-height:1.5}label{display:block;font-weight:700;margin:20px 0 7px}input{width:100%;font-size:18px;padding:15px;border:1px solid #aaa;border-radius:10px}button{width:100%;margin-top:24px;padding:16px;background:#171717;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:700}.error{background:#fee;color:#9b1c1c;padding:12px;border-radius:8px}@media(max-width:560px){.wrap{margin:22px auto;padding:14px}.card{padding:24px}}</style></head><body>',
+    '<style>*{box-sizing:border-box}body{margin:0;background:#f3f3ef;color:#171717;font-family:Arial,sans-serif}header{background:#111;color:#fff;padding:26px 24px;border-bottom:5px solid #d71920}.brand{font-size:28px;font-weight:800;letter-spacing:4px}.sub{color:#d71920;font-size:12px;letter-spacing:4px;margin-top:4px}.wrap{max-width:520px;margin:48px auto;padding:20px}.card{background:#fff;border-radius:22px;padding:32px;box-shadow:0 16px 40px #0002}h1{margin:0 0 8px;font-size:32px}p{color:#555;line-height:1.5}label{display:block;font-weight:700;margin:20px 0 7px}input{width:100%;font-size:18px;padding:15px;border:1px solid #aaa;border-radius:10px}button{width:100%;margin-top:24px;padding:16px;background:#171717;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:700}.error{background:#fee;color:#9b1c1c;padding:12px;border-radius:8px}@media(max-width:560px){.wrap{margin:22px auto;padding:14px}.card{padding:24px}}</style></head><body>',
     '<header><div class="brand">KESTRELS</div><div class="sub">MOTOR COMPANY</div></header>',
-    '<main class="wrap"><section class="card"><p style="color:#7c8b00;font-weight:800;letter-spacing:2px">MY KESTRELS</p><h1>Staff Login</h1><p>Sign in to manage customer records and create individual app links.</p>',
+    '<main class="wrap"><section class="card"><p style="color:#b3131b;font-weight:800;letter-spacing:2px">MY KESTRELS</p><h1>Staff Login</h1><p>Sign in to manage customer records and create individual app links.</p>',
     error,
     '<form method="post" action="/staff-login"><label for="username">Username</label><input id="username" name="username" autocomplete="username" autocapitalize="none" required>',
     '<label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required><button type="submit">Sign In</button></form></section></main></body></html>'
@@ -198,8 +198,9 @@ app.get("/manifest.json", (req, res) => {
     theme_color: "#111111",
     description: "Your vehicle, reminders, bookings and Kestrels support in one place.",
     icons: [
-      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+      { src: "/icon-kestrels-traffic-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icon-kestrels-traffic-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icon-kestrels-traffic-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" }
     ]
   });
 });
@@ -261,7 +262,7 @@ app.get("/api/mot/:registration", requireAdmin, async (req, res) => {
 });
 
 app.get("/", (req, res) => res.sendFile(path.join(rootDir, "index.html")));
-for (const file of ["app.js", "styles.css", "sw.js", "icon.svg", "icon-192.png", "icon-512.png", "apple-touch-icon.png"]) {
+for (const file of ["app.js", "styles.css", "sw.js", "icon.svg", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "icon-kestrels-traffic-192.png", "icon-kestrels-traffic-512.png", "icon-kestrels-traffic-maskable-512.png", "apple-touch-icon-traffic.png"]) {
   app.get("/" + file, (req, res) => res.sendFile(path.join(rootDir, file)));
 }
 
