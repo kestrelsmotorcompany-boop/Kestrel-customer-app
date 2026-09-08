@@ -52,7 +52,7 @@
         <button class="secondary" type="button" id="cancelEdit" hidden>Cancel edit</button>
       </form>
       <div id="status"></div>
-      <div id="result"><strong>Customer link:</strong><p><a id="customerLink" target="_blank" rel="noopener"></a></p><button class="secondary" id="copyButton">Copy link</button></div>
+      <div id="result"><strong>Customer link:</strong><p><a id="customerLink" target="_blank" rel="noopener"></a></p><a class="button" id="shareWhatsApp" target="_blank" rel="noopener">Send app by WhatsApp</a><button class="secondary" id="copyButton">Copy link</button></div>
     </section>
     <section>
       <h2>Customers</h2>
@@ -75,6 +75,15 @@
 
     function customerUrl(id) {
       return window.location.origin + "/?customer=" + encodeURIComponent(id);
+    }
+
+    function installMessage(customer) {
+      const firstName = String(customer.name || "").trim().split(/\s+/)[0] || "there";
+      return "Hi " + firstName + ", here is your personal My Kestrels app:\n\n" + customerUrl(customer.id) + "\n\nOpen the link and tap Add to Home Screen. On iPhone, open it in Safari, tap Share, then Add to Home Screen. On Android, tap Install My Kestrels.";
+    }
+
+    function whatsappShareUrl(customer) {
+      return "https://wa.me/?text=" + encodeURIComponent(installMessage(customer));
     }
 
     async function api(url, options = {}) {
@@ -121,6 +130,7 @@
         const linkElement = document.getElementById("customerLink");
         linkElement.textContent = link;
         linkElement.href = link;
+        document.getElementById("shareWhatsApp").href = whatsappShareUrl({ ...payload, id: saved.id });
         document.getElementById("result").style.display = "block";
         showStatus(id ? "Customer updated." : "Customer created.");
         resetForm();
@@ -172,6 +182,7 @@
           <p><strong>${escapeHtml(c.registration)}</strong> · ${escapeHtml(c.make)}</p>
           <div class="actions">
             <a class="button secondary" href="${customerUrl(c.id)}" target="_blank" rel="noopener">Open app</a>
+            <a class="button" href="${whatsappShareUrl(c)}" target="_blank" rel="noopener">Send by WhatsApp</a>
             <button class="secondary" data-copy="${c.id}">Copy link</button>
             <button class="secondary" data-edit="${c.id}">Edit</button>
           </div>
